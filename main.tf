@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "3.26.0"
     }
+    google = {
+      source  = "hashicorp/aws"
+      version = "3.57.0"
+    }
     random = {
       source  = "hashicorp/random"
       version = "3.0.1"
@@ -18,6 +22,36 @@ terraform {
       name = "matrix"
     }
   }
+}
+
+provider "google" {
+  project = var.gcp_project_id
+  region  = "us-central1"
+  zone    = "us-central1-c"
+  credentials = var.gcp_credentials
+}
+
+resource "google_compute_instance" "vm_instance" {
+  name         = "terraform-instance"
+  machine_type = "f1-micro"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-9"
+    }
+  }
+
+  network_interface {
+    # A default network is created for all GCP projects
+    network = google_compute_network.vpc_network.self_link
+    access_config {
+    }
+  }
+}
+
+resource "google_compute_network" "vpc_network" {
+  name                    = "terraform-network"
+  auto_create_subnetworks = "true"
 }
 
 provider "aws" {
