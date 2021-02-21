@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "3.26.0"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "3.57.0"
+    }
     random = {
       source  = "hashicorp/random"
       version = "3.0.1"
@@ -48,6 +52,32 @@ resource "aws_security_group" "web-sg" {
   }
 }
 
-output "web-address" {
+output "web_address" {
   value = "${aws_instance.web.public_dns}:8080"
+}
+
+variable "gcp_project_id" {
+  default = ""
+}
+
+variable "gcp_credentials" {
+  default = {}
+}
+
+provider "google" {
+  project     = var.gcp_project_id
+  region      = "us-central1"
+  zone        = "us-central1-c"
+  credentials = var.gcp_credentials
+}
+
+resource "google_dns_managed_zone" "dev" {
+  name        = "matrix-subdomain"
+  dns_name    = "matrix.jowens.dev"
+  description = "Sub domain for matrix configuration"
+  forwarding_config {
+    target_name_servers {
+      ipv4_address = "${aws_instance.web.public_dns}:8080"
+    }
+  }
 }
