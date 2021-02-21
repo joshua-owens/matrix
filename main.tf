@@ -65,9 +65,9 @@ variable "gcp_credentials" {
 }
 
 provider "google" {
-  project     = var.gcp_project_id
-  region      = "us-central1"
-  zone        = "us-central1-c"
+  project = var.gcp_project_id
+  region  = "us-central1"
+  zone    = "us-central1-c"
 }
 
 resource "google_dns_managed_zone" "dev" {
