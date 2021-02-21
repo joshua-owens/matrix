@@ -24,44 +24,6 @@ terraform {
   }
 }
 
-variable "gcp_project_id" {
-  default = ""
-}
-
-variable "gcp_credentials" {
-  default = {}
-}
-
-provider "google" {
-  project     = var.gcp_project_id
-  region      = "us-central1"
-  zone        = "us-central1-c"
-  credentials = var.gcp_credentials
-}
-
-resource "google_compute_instance" "vm_instance" {
-  name         = "terraform-instance"
-  machine_type = "f1-micro"
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-9"
-    }
-  }
-
-  network_interface {
-    # A default network is created for all GCP projects
-    network = google_compute_network.vpc_network.self_link
-    access_config {
-    }
-  }
-}
-
-resource "google_compute_network" "vpc_network" {
-  name                    = "terraform-network"
-  auto_create_subnetworks = "true"
-}
-
 provider "aws" {
   region = "us-west-2"
 }
@@ -90,6 +52,32 @@ resource "aws_security_group" "web-sg" {
   }
 }
 
-output "web-address" {
+output "web_address" {
   value = "${aws_instance.web.public_dns}:8080"
+}
+
+variable "gcp_project_id" {
+  default = ""
+}
+
+variable "gcp_credentials" {
+  default = {}
+}
+
+provider "google" {
+  project     = var.gcp_project_id
+  region      = "us-central1"
+  zone        = "us-central1-c"
+  credentials = var.gcp_credentials
+}
+
+resource "google_dns_managed_zone" "dev" {
+  name        = "matrix-subdomain"
+  dns_name    = "matrix.jowens.dev"
+  description = "Sub domain for matrix configuration"
+  forwarding_config {
+    target_name_servers {
+      ipv4_address = web_address
+    }
+  }
 }
