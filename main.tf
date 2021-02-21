@@ -56,13 +56,13 @@ output "web_address" {
   value = "${aws_instance.web.public_dns}:8080"
 }
 
-# variable "gcp_project_id" {
-#   default = ""
-# }
+variable "gcp_project_id" {
+  default = ""
+}
 
-# variable "gcp_credentials" {
-#   default = {}
-# }
+variable "gcp_credentials" {
+  default = {}
+}
 
 # provider "google" {
 #   project = var.gcp_project_id
