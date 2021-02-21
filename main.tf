@@ -77,7 +77,7 @@ resource "google_dns_managed_zone" "dev" {
   description = "Sub domain for matrix configuration"
   forwarding_config {
     target_name_servers {
-      ipv4_address = web_address
+      ipv4_address = "${aws_instance.web.public_dns}:8080"
     }
   }
 }
