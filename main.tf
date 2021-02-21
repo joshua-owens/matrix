@@ -56,27 +56,27 @@ output "web_address" {
   value = "${aws_instance.web.public_dns}:8080"
 }
 
-variable "gcp_project_id" {
-  default = ""
-}
+# variable "gcp_project_id" {
+#   default = ""
+# }
 
-variable "gcp_credentials" {
-  default = {}
-}
+# variable "gcp_credentials" {
+#   default = {}
+# }
 
-provider "google" {
-  project = var.gcp_project_id
-  region  = "us-central1"
-  zone    = "us-central1-c"
-}
+# provider "google" {
+#   project = var.gcp_project_id
+#   region  = "us-central1"
+#   zone    = "us-central1-c"
+# }
 
-resource "google_dns_managed_zone" "dev" {
-  name        = "matrix-subdomain"
-  dns_name    = "matrix.jowens.dev."
-  description = "Sub domain for matrix configuration"
-  forwarding_config {
-    target_name_servers {
-      ipv4_address = "${aws_instance.web.public_dns}:8080"
-    }
-  }
-}
+# resource "google_dns_managed_zone" "dev" {
+#   name        = "matrix-subdomain"
+#   dns_name    = "matrix.jowens.dev."
+#   description = "Sub domain for matrix configuration"
+#   forwarding_config {
+#     target_name_servers {
+#       ipv4_address = "${aws_instance.web.public_dns}:8080"
+#     }
+#   }
+# }
