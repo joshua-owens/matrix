@@ -72,7 +72,7 @@ provider "google" {
 
 resource "google_dns_managed_zone" "dev" {
   name        = "matrix-subdomain"
-  dns_name    = "matrix.jowens.dev"
+  dns_name    = "matrix.jowens.dev."
   description = "Sub domain for matrix configuration"
   forwarding_config {
     target_name_servers {
